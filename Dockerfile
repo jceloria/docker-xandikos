@@ -21,7 +21,8 @@ CMD chown -R ${PUID}:${PGID} /data && \
     --cheaper=2 \
     --processes=4 \
     --plugin=python3 \
-    --uid=${PUID} --gid=${PGID} \
+    --uid=$(getent passwd ${PUID}|cut -d: -f1) \
+    --gid=$(getent group ${PGID}|cut -d: -f1) \
     --module=xandikos.wsgi:app \
     --env=XANDIKOSPATH=/data \
     --env=CURRENT_USER_PRINCIPAL=${current_user_principal} \
