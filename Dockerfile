@@ -7,14 +7,15 @@ ENV autocreate="defaults"
 ENV current_user_principal="/user1"
 
 RUN apk --no-cache add gcc git linux-headers libc-dev && \
-    pip3 install uwsgi xandikos && \
+    pip3 install uwsgi xandikos && mkdir /data && \
     apk --no-cache del *-dev linux-headers gcc && rm -rf /var/cache/apk/*
 
 EXPOSE 8000
 
 VOLUME ["/data"]
 
-CMD uwsgi --http-socket=:8000 \
+CMD chown -R ${PUID}:${PGID} /data && \
+    uwsgi --http-socket=:8000 \
     --umask=022 \
     --master \
     --cheaper=2 \
